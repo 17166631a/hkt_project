@@ -62,7 +62,7 @@ app.get('/users/validation', (req,res)=>{
     });
 });
 
-//Select HKTCS details
+// Search for HKT contorl staff details
 app.get('/users/hktcs_details', (req,res)=>{
     const {username}=req.query;
     const FIND_USER = 
@@ -83,7 +83,7 @@ app.get('/users/hktcs_details', (req,res)=>{
     });
 });
 
-//Select ET details
+//Search for engineering team details
 app.get('/users/et_details', (req,res)=>{
     const {username}=req.query;
     const FIND_USER = 
@@ -104,7 +104,7 @@ app.get('/users/et_details', (req,res)=>{
     });
 });
 
-// Select all users
+// Search for all users
 app.get('/users', (req, res)=>{
     connection.query(SELECT_ALL_USERS, (err, results)=>{
         if(err){
@@ -117,14 +117,14 @@ app.get('/users', (req, res)=>{
     });
 });
 
-// Select workitems with specific type (ATG or IBI)
-app.get('/workitems', (req, res)=>{
-    const {type}=req.query;
+// Search for work items with condition (specific search)
+app.get('/workitems/find', (req, res)=>{
+    const {field, keyword}=req.query;
     const SELECT_ALL_WI = 
     `
     SELECT * 
     FROM workitems
-    WHERE type='${type}'
+    WHERE ${field}='${keyword}'
     `
     connection.query(SELECT_ALL_WI, (err, results)=>{
         if(err){
@@ -137,7 +137,7 @@ app.get('/workitems', (req, res)=>{
     });
 });
 
-// display all orders
+// search for all orders
 app.get('/orders', (req, res)=>{
     const SELECT_ALL_ORDERS = `SELECT * FROM orders;`;
     connection.query(SELECT_ALL_ORDERS, (err, results)=>{

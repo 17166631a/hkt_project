@@ -22,7 +22,7 @@ class WorkItemsPage extends Component {
     getitems = type => {
         workitem_type = type;
         console.log(type);
-        fetch(`http://localhost:8080/workitems?type=${type}`)
+        fetch(`http://localhost:8080/workitems/find?field=type&keyword=${type}`)
           .then(response => response.json())
           .then(response => {
             if(type==='ATG'){

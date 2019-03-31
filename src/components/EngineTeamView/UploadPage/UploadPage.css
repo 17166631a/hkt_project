@@ -10,3 +10,7 @@
     right:-100%;
     cursor: pointer;
 }
+
+textarea{
+    resize: none;
+}

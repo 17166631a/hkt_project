@@ -19,9 +19,8 @@ class UploadPage extends Component {
             ItemID: "",
             Description: "",
             Unit:"",
-            UnitRate:"",
+            UnitRate:"0",
             Qty: "",
-            Amount:"",
             Remarks: "",
             date: upload_date
         }
@@ -31,23 +30,50 @@ class UploadPage extends Component {
         this.setState({
             OrderNum: e.target.value
         },
-        ()=>{
-            fetch(`http://localhost:8080/orders/findThe?field=order_number&keyword=${this.state.OrderNum}`)
-            .then((res)=>res.json())
-            .then((res)=>{
-                console.log(res.data[0]);
-                this.setState({
-                    BSN:res.data[0].BSN
-                })
-            })
-            .catch(err=>{
-                this.setState({
-                    BSN:""
-                })
-            })
-            console.log(this.state)
-        }
-        )
+            ()=>{
+                fetch(`http://localhost:8080/orders/findThe?field=order_number&keyword=${this.state.OrderNum}`)
+                .then((res)=>res.json())
+                .then((res)=>{
+                    console.log(res.data[0]);
+                    this.setState({
+                        BSN:res.data[0].BSN
+                    }) // end of setState()
+                }) // end of then block
+                .catch(err=>{
+                    this.setState({
+                        BSN:""
+                    })
+                }) // end of catch block
+                console.log(this.state)
+            } // end of callback()
+        ) // end of setState()
+    } // end of orderNumOnchange()
+
+    itemOnchange = e => {
+        this.setState({
+            ItemID: e.target.value
+        }, 
+            ()=>{
+                fetch(`http://localhost:8080/workitems/find?field=work_item_id&keyword=${this.state.ItemID}`)
+                .then((res)=>res.json())
+                .then((res)=>{
+                    console.log(res.data[0]);
+                    this.setState({
+                        Description: res.data[0].description,
+                        Unit: res.data[0].unit,
+                        UnitRate: res.data[0].unit_rate
+                    }) // end of setState()
+                }) // end of then block
+                .catch(err=>{
+                    this.setState({
+                        Description: "",
+                        Unit: "",
+                        UnitRate: "0"
+                    })
+                }) // end of catch block
+                console.log(this.state)
+            } // end of callback()
+        ) // end of setState()
     }
 
     onChange = e => {
@@ -77,7 +103,12 @@ class UploadPage extends Component {
                     <div className="form-row">
                         <div className="col-sx-2">
                             <label htmlFor="BSN">BSN: </label>
-                            <input type="text" className="form-control" id="BSN" value={this.state.BSN} onChange={this.onChange}/>
+                            <input type="text" className="form-control" id="BSN" value={this.state.BSN} onChange={this.onChange} readOnly/>
+
+                            <select id="BSN" class="form-control">
+                                <option selected>Choose...</option>
+                                <option>...</option>
+                            </select>
                         </div>
                     </div>
                     <hr/>
@@ -89,9 +120,9 @@ class UploadPage extends Component {
                     <div className="form-row">
                         <div className="col">
                             <label htmlFor="itemID">Item ID: </label>
-                            <input type="text" className="form-control" id="ItemID" value={this.state.ItemID} onChange={this.onChange}/>
+                            <input type="text" className="form-control" id="ItemID" value={this.state.ItemID} onChange={this.itemOnchange}/>
                         </div>
-                        <div className="col-5">
+                        <div className="col-6">
                             <label htmlFor="description">Description: </label>
                             <input type="text" className="form-control" id="Description" value={this.state.Description} readOnly/>
                         </div>
@@ -101,7 +132,7 @@ class UploadPage extends Component {
                         </div>
                         <div className="col">
                             <label htmlFor="unitRate">Unit Rate: </label>
-                            <input type="text" className="form-control" id="UnitRate" value={this.state.UnitRate} readOnly/>
+                            <input type="text" className="form-control" id="UnitRate" value={`$${this.state.UnitRate}`} readOnly/>
                         </div>
                         <div className="col">
                             <label htmlFor="qty">Qty: </label>
@@ -109,7 +140,7 @@ class UploadPage extends Component {
                         </div>
                         <div className="col">
                             <label htmlFor="amount">Amount: </label>
-                            <input type="text" className="form-control" id="Amount" value={this.state.Amount} readOnly/>
+                            <input type="text" className="form-control" id="Amount" value={`$${this.state.UnitRate*this.state.Qty}`} readOnly/>
                         </div>
                     </div>
                     <i className="fas fa-plus addColBtn"></i>
